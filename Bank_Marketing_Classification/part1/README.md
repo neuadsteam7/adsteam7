@@ -85,9 +85,10 @@ The entire model has been pipelined using **Luigi**
 The final pipeline is docerized
 
 The commands to build and run the docker image are
+
 (a.) docker build -f Dockerfile .
 
-(b.) docker run -e ak=<AWS_ACCESS_KEY> -e sk=<AWS_SECRET_KEY> -t -i <username>/<reponame>
+(b.) docker run -e ak=<AWS_ACCESS_KEY> -e sk=<AWS_SECRET_KEY> -t -i "username"/"reponame"
 
 
 **The models in Part 1 will be deployed as a web application in Part 2 with user interface**
