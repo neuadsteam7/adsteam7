@@ -2,7 +2,7 @@
 
 This part of the assignment designs and build prediction model for a bank campaign performed to predict whether a customer will subscribe to the term deposit provided by the Bank or not.
 
-<h2> FinalLast_Assignment_DataCleaning & EDA-ADS.pynb </h2>
+<h2> DataCleaning & EDA.pynb </h2>
 
 (a.) Data has been pulled from Amazon S3 to the local machine
 
@@ -14,7 +14,7 @@ This part of the assignment designs and build prediction model for a bank campai
 
 (e.) Exploratory data analysis is performed on the dataset to read the data pattern and analysis conclusion has been updated at the end of the notebook
 
-<h2>FinalLast_Assignment_FeatureEngineering-ADS.ipynb</h2>
+<h2>FeatureEngineering.ipynb</h2>
 
 (a.) All the categorical features are on hot encoded so that it can be used for mathematical analysis
 
@@ -22,7 +22,13 @@ This part of the assignment designs and build prediction model for a bank campai
 
 (c.) The output dataset is then exported to csv
 
-<h2>FinalLast_Assignment_MachineLearning-ADS.ipynb</h2>
+<h2>FeatureSelection_ADS.ipynb</h2>
+
+(a.) Since the features after feature engineering increased from 21 to 65. Feature selection techniques are perform.
+
+(b.) Features a re selected on the basis of output from Recrusive feature elimination and Feature importance techniques.
+
+<h2>MachineLearning.ipynb</h2>
 
 (a.) With the csv from feature engineering notebook, the dataset is cross validated with 13 different classifiers.
 
@@ -30,13 +36,7 @@ This part of the assignment designs and build prediction model for a bank campai
 
 (c.) All the three classifier are seperaetly trained with train dataset and predicted with test dataset
 
-<h2>FinalLast_Assignment_FeatureSelection_ADS.ipynb</h2>
-
-(a.) Since the features after feature engineering increased from 21 to 65. Feature selection techniques are perform.
-
-(b.) Features a re selected on the basis of output from Recrusive feature elimination and Feature importance techniques.
-
-<h2>FinalLast_Assignment_ModelSelection-ADS.ipynb</h2>
+<h2>ModelSelection.ipynb</h2>
 
 (a.) With selected features hyperparameter tunning is done using Grid search for three different model:
 
@@ -46,7 +46,7 @@ This part of the assignment designs and build prediction model for a bank campai
                     
                     3. Logistic Regression 
 
-<h2>FinalLast_Assignment_Pickle LogisticRegression-ADS.ipynb</h2>
+<h2>Pickle LogisticRegression.ipynb</h2>
 
 (a.) Model are redesigned with hypertuned parameters along with selected features
 
@@ -54,7 +54,7 @@ This part of the assignment designs and build prediction model for a bank campai
 
 (c.) Error metrics are calculated and exported as csv for LogisticRegression
 
-<h2>FinalLast_Assignment_Pickle MLPClassifier-ADS.ipynb</h2>
+<h2>Pickle MLPClassifier.ipynb</h2>
 
 (a.) Model are redesigned with hypertuned parameters along with selected features
 
@@ -62,7 +62,7 @@ This part of the assignment designs and build prediction model for a bank campai
 
 (c.) Error metrics are calculated and exported as csv for MLPClassifier
 
-<h2>FinalLast_Assignment_Pickle SGDClassifier-ADS.ipynb</h2>
+<h2>Pickle SGDClassifier.ipynb</h2>
 
 (a.) Model are redesigned with hypertuned parameters along with selected features
 
@@ -70,19 +70,24 @@ This part of the assignment designs and build prediction model for a bank campai
 
 (c.) Error metrics are calculated and exported as csv for SGDClassifier
 
-<h2>Boto3.ipynb</h2>
+<h2>Upload.ipynb</h2>
 
 (a.) A bucket is created in S3 using boto3
 
 (b.) All three pickle file along with repective error metric csv are uploaded to amazon s3 bucket
 
-<h2/>Pipepline</h2>
+<h2/>Pipeline</h2>
 
-The entier model has been pipelined using **Luigi**
+The entire model has been pipelined using **Luigi**
 
 <h2>Docker</h2>
 
-The final pipeline is docterized
+The final pipeline is docerized
+
+The commands to build and run the docker image are
+(a.) docker build -f Dockerfile .
+
+(b.) docker run -e ak=<AWS_ACCESS_KEY> -e sk=<AWS_SECRET_KEY> -t -i <username>/<reponame>
 
 
 **The models in Part 1 will be deployed as a web application in Part 2 with user interface**
