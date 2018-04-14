@@ -15,4 +15,4 @@ RUN pip install scipy
 
 COPY pipeline.py /src/assignment2/
 
-CMD ["sh", "-c", "python /src/assignment2/pipeline.py PredictionModel --local-scheduler --aws-access-key-id ${ak} --aws-secret-access-key ${sk} "] 
+CMD ["sh", "-c", "python /src/assignment2/pipeline.py PredictionModel --local-scheduler --aws-access-key-id ${ak} --aws-secret-access-key ${sk} "]

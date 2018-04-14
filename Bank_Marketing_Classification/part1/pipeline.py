@@ -14,6 +14,8 @@ from sklearn.neural_network import MLPClassifier
 from urllib.request import urlopen
 import os
 import boto3
+from boto.s3.connection import S3Connection
+from boto.s3.key import Key
 from io import BytesIO
 import pickle
 import datetime
@@ -390,23 +392,43 @@ class PredictionModel(luigi.Task):
         readable = datetime.datetime.fromtimestamp(time.time()).isoformat()
         # s3 = boto3.resource('s3')
         
-        session = boto3.session.Session(region_name='us-east-1')
-        s3 = session.client('s3', config= boto3.session.Config(signature_version='s3v4'),aws_access_key_id=self.aws_access_key_id,
-         aws_secret_access_key=self.aws_secret_access_key)
-
+        # session = boto3.session.Session(region_name='us-east-1')
+        # s3 = session.client('s3', config= boto3.session.Config(signature_version='s3v4'),aws_access_key_id=self.aws_access_key_id,
+        #  aws_secret_access_key=self.aws_secret_access_key)
+        conn = S3Connection(self.aws_access_key_id, self.aws_secret_access_key)
+        b = conn.get_bucket('bankdepositterm')
+        k = Key(b)
+        k.key = 'LogisticReport.csv'
+        k.set_contents_from_filename('LogisticReport.csv')
+        k.set_acl('public-read')
+        k.key = 'SGDReport.csv'
+        k.set_contents_from_filename('SGDReport.csv')
+        k.set_acl('public-read')
+        k.key = 'MLPReport.csv'
+        k.set_contents_from_filename('MLPReport.csv')
+        k.set_acl('public-read')
+        k.key = 'MLP_Classifier.pkl'
+        k.set_contents_from_filename('MLP_Classifier.pkl')
+        k.set_acl('public-read')
+        k.key = 'logistic_clf.pkl'
+        k.set_contents_from_filename('logistic_clf.pkl')
+        k.set_acl('public-read')
+        k.key = 'SGD_Classifier.pkl'
+        k.set_contents_from_filename('SGD_Classifier.pkl')
+        k.set_acl('public-read')
         # s3.create_bucket(Bucket='bankdepositterm'+readable)
-        data = open('LogisticReport.csv', 'rb')
-        s3.put_object(Bucket='bankdepositterm', Key='LogisticReport.csv', Body=data)
-        data = open('SGDReport.csv', 'rb')
-        s3.put_object(Bucket='bankdepositterm', Key='SGDReport.csv', Body=data)
-        data = open('MLPReport.csv', 'rb')
-        s3.put_object(Bucket='bankdepositterm', Key='MLPReport.csv', Body=data)
-        data = open('MLP_Classifier.pkl', 'rb')
-        s3.put_object(Bucket='bankdepositterm', Key='MLP_Classifier.pkl', Body=data)
-        data = open('logistic_clf.pkl', 'rb')
-        s3.put_object(Bucket='bankdepositterm', Key='logistic_clf.pkl', Body=data)
-        data = open('SGD_Classifier.pkl', 'rb')
-        s3.put_object(Bucket='bankdepositterm', Key='SGD_Classifier.pkl', Body=data)
+        # data = open('LogisticReport.csv', 'rb')
+        # s3.put_object(Bucket='bankdepositterm', Key='LogisticReport.csv', Body=data)
+        # data = open('SGDReport.csv', 'rb')
+        # s3.put_object(Bucket='bankdepositterm', Key='SGDReport.csv', Body=data)
+        # data = open('MLPReport.csv', 'rb')
+        # s3.put_object(Bucket='bankdepositterm', Key='MLPReport.csv', Body=data)
+        # data = open('MLP_Classifier.pkl', 'rb')
+        # s3.put_object(Bucket='bankdepositterm', Key='MLP_Classifier.pkl', Body=data)
+        # data = open('logistic_clf.pkl', 'rb')
+        # s3.put_object(Bucket='bankdepositterm', Key='logistic_clf.pkl', Body=data)
+        # data = open('SGD_Classifier.pkl', 'rb')
+        # s3.put_object(Bucket='bankdepositterm', Key='SGD_Classifier.pkl', Body=data)
 
         self.output()
 
