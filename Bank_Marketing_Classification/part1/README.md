@@ -76,4 +76,13 @@ This part of the assignment designs and build prediction model for a bank campai
 
 (b.) All three pickle file along with repective error metric csv are uploaded to amazon s3 bucket
 
-**The entire builded model in Part 1 will be deployed as a web application in Part 2 with user interface**
+<h2/>Pipepline</h2>
+
+The entier model has been pipelined using **Luigi**
+
+<h2>Docker</h2>
+
+The final pipeline is docterized
+
+
+**The models in Part 1 will be deployed as a web application in Part 2 with user interface**
