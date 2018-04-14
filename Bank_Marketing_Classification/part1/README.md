@@ -73,4 +73,4 @@ This part of the assignment designs and build prediction model for a bank campai
 
 (b.) All three pickle file along with repective error metric csv are uploaded to amazon s3 bucket
 
-
+**The entire builded model in Part 1 will be deployed as a web application in Part 2 with user interface
