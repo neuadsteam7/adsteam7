@@ -39,8 +39,11 @@ This part of the assignment designs and build prediction model for a bank campai
 <h2>FinalLast_Assignment_ModelSelection-ADS.ipynb</h2>
 
 (a.) With selected features hyperparameter tunning is done using Grid search for three different model:
-                    1. MLP Classifier 
+
+                    1. MLP Classifier
+                    
                     2. SGD Classifier
+                    
                     3. Logistic Regression 
 
 <h2>FinalLast_Assignment_Pickle LogisticRegression-ADS.ipynb</h2>
@@ -73,4 +76,4 @@ This part of the assignment designs and build prediction model for a bank campai
 
 (b.) All three pickle file along with repective error metric csv are uploaded to amazon s3 bucket
 
-**The entire builded model in Part 1 will be deployed as a web application in Part 2 with user interface
+**The entire builded model in Part 1 will be deployed as a web application in Part 2 with user interface**
