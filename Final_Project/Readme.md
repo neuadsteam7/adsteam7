@@ -6,13 +6,13 @@
 
 3) Getting real time images from instagram and twitter for testing
 
-__#Things in progress__
+__Things in progress__
 
 1) model building using keras
 
 2) Visualization of retraining using tensorboard
 
-<h2>#Week 2</h2>
+<h2>Week 2</h2>
 
 1) Complete the model building
 
@@ -24,6 +24,6 @@ __#Things in progress__
 
 5) Dockerizing the pipeline
 
-__#Challenges faced__
+__Challenges faced__
 
 1) The training dataset contained less number of images with real time backgrounds
