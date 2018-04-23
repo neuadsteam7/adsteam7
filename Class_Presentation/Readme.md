@@ -2,7 +2,7 @@
 
 This presentation will focus on the growing demand of Big data and AI technology in Financial Industry.
 
-<h3> .pptm</h3>
+<h3> Big Data & AI in Finance.pptm</h3>
 
 Power point presentation slides on the topic.
 
