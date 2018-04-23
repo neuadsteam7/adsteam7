@@ -1,4 +1,4 @@
-<h1> Big Data & AI in Finance <h1/>
+<h1> Big Data & AI in Finance </h1>
 
 Stock_Prediction notebook predicts stock data for 1 month from the current date
 
