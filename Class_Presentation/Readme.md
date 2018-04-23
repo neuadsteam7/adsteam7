@@ -6,7 +6,7 @@ This presentation will focus on the growing demand of Big data and AI technology
 
 Power point presentation slides on the topic.
 
-<h3> Technical Blog </h3>
+<h3> Team_7_Blog.pdf </h3>
 
 Four page technical blog explaning our presentaion.
 
