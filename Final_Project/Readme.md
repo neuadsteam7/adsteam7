@@ -20,7 +20,8 @@ The folder consists of the convolutional neural network build using keras with t
 
 Contains the flask required templates and python files
 
-
+<h2> EC2 instance containg web application </h2>
+ec2-18-233-167-186.compute-1.amazonaws.com
 
 
 
