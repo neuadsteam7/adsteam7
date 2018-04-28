@@ -1,4 +1,4 @@
-<H1, align = 'center'> Brand Logo Visibility using Convolutional Neural Network </H1>
+<H1, align = 'center'> Brand Logo Visibility using Convolutional Neural Network </H1, align='center'>
 
 The advertising and branding industry has become more crowded than it previously was and it is not just increasing but increasing exponentially which is a major cause of concern for all those who also want their branding and advertising campaigns to reap expected benefits for them. Every company logo is the first and most important branding tool and it has the power to effectively register an overhaul in your company’s recognition and success. Logo is what defines brand and conveys the ideology and purpose of the brand to the consumer. If it’s instantly recognizable, then rest assured, the sales will look north. Our project recognises logo present in any given image. The image logo classification was built in two different models of neural network for comparison. Later, the project was deployed in EC2 instance to create web application with user interface.
 
