@@ -6,49 +6,36 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
 from numpy import argmax
-from sklearn.metrics import confusion_matrix, classification_report
-from sklearn.metrics import accuracy_score
-from sklearn.feature_selection import RFECV
-from sklearn.linear_model import LogisticRegression
-from sklearn.neural_network import MLPClassifier
-from urllib.request import urlopen
 import os
-from io import BytesIO
-import pickle
-import datetime
-import time
 from zipfile import ZipFile
-from sklearn.linear_model import SGDClassifier
-
 import h5py
 from keras.preprocessing.image import ImageDataGenerator, img_to_array, load_img
 import math
+import tensorflow as tf
 from tensorflow.python.client import device_lib
 import glob
 from PIL import Image
 from boto3 import client
 from boto3.session import Session
-import tensorflow as tf
 from keras.optimizers import SGD
 from keras.callbacks import LearningRateScheduler
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, MaxPooling2D, Dropout, Flatten, BatchNormalization
 from keras.callbacks import ModelCheckpoint
 from numpy import array
-import skimage.io
 
-def getData(luigi.Task):
+class getData(luigi.Task):
 
-    aws_access_key_id = self.aws_access_key_id
-    aws_secret_access_key = self.aws_secret_access_key
+    accessKey = luigi.Parameter()
+    secretAccessKey = luigi.Parameter()
     bucketName = 'data-brand-logos'
 
     def output(self):
-        print("Downloaded successfully.")
+        return [accessKey, secretAccessKey]
 
     def run(self):
-        session = Session(aws_access_key_id=self.aws_access_key_id,
-                  aws_secret_access_key=self.aws_secret_access_key)
+        session = Session(aws_access_key_id=self.accessKey,
+                  aws_secret_access_key=self.secretAccessKey)
         s3 = session.resource('s3')
         your_bucket = s3.Bucket(bucketName)
         for s3_file in your_bucket.objects.all():
@@ -59,18 +46,27 @@ def getData(luigi.Task):
                     os.makedirs(s3_file.key)
 
 
-def BuildKeras(luigi.Task):
+class BuildKeras(luigi.Task):
 
-    aws_access_key_id = self.aws_access_key_id
-    aws_secret_access_key = self.aws_secret_access_key
 
-    def requires(self):
-        yield getData()
+    accessKey = luigi.Parameter()
+    secretAccessKey = luigi.Parameter()
+    bucketName = 'data-brand-logos'
 
     def output(self):
         print('Success')
 
     def run(self):
+        session = Session(aws_access_key_id=self.accessKey,
+                  aws_secret_access_key=self.secretAccessKey)
+        s3 = session.resource('s3')
+        your_bucket = s3.Bucket(self.bucketName)
+        for s3_file in your_bucket.objects.all():
+            if not s3_file.key.endswith("/"):
+                your_bucket.download_file(s3_file.key, s3_file.key)
+            else:
+                if not os.path.exists(s3_file.key):
+                    os.makedirs(s3_file.key)
         folder ="images/*.jpg"
         images=glob.glob(folder)
         annot_train = np.loadtxt('training_annotation.txt', dtype='a')
@@ -82,10 +78,10 @@ def BuildKeras(luigi.Task):
             if names not in brands:
                 brands.append(names)
         for name in brands:
-        if not os.path.exists(os.getcwd()+'/train/'+name):
-            os.makedirs('train/'+name)
-        if not os.path.exists(os.getcwd()+'/validate/'+name):
-            os.makedirs('validate/'+name)
+            if not os.path.exists(os.getcwd()+'/train/'+name):
+                os.makedirs('train/'+name)
+            if not os.path.exists(os.getcwd()+'/validate/'+name):
+                os.makedirs('validate/'+name)
         trainImageNameList = annot_train[:,0]
         testImageNameList = annot_test[:,0]
         cwd = os.getcwd()
@@ -202,27 +198,13 @@ def BuildKeras(luigi.Task):
         plt.savefig(args["output-keras"])
         plt.close()
 
-        session = Session(aws_access_key_id=self.aws_access_key_id,
-                  aws_secret_access_key=self.aws_secret_access_key)
+        session = Session(aws_access_key_id=self.input()[0],
+                  aws_secret_access_key=self.input()[1])
         s3 = session.resource('s3')
-        your_bucket = s3.Bucket(bucketName)
+        your_bucket = s3.Bucket(self.bucketName)
         your_bucket.upload_file('weights.best.hdf5', '/weights.best.hdf5')
         your_bucket.upload_file('output-keras', '/output-keras.jpg')
 
-
-
-def ExecutePipeline(luigi.Task):
-    aws_access_key_id = luigi.Parameter()
-    aws_secret_access_key = luigi.Parameter()
-
-    def requires(self):
-        yield BuildKeras()
-
-    def output(self):
-        print("Success")
-
-    def run(self):
-        print('Completed Successfully')
 
 if __name__ == '__main__':
     luigi.run()
