@@ -1,29 +1,4 @@
-<h2>Week 1</h2>
+<H1, align = 'center'> Brand Logo Visibility using Convolutional Neural Network </H1>
 
-1) Data preprocessing (finding duplicates & augmentation)
+The advertising and branding industry has become more crowded than it previously was and it is not just increasing but increasing exponentially which is a major cause of concern for all those who also want their branding and advertising campaigns to reap expected benefits for them. Every company logo is the first and most important branding tool and it has the power to effectively register an overhaul in your company’s recognition and success. Logo is what defines brand and conveys the ideology and purpose of the brand to the consumer. If it’s instantly recognizable, then rest assured, the sales will look north. Our project recognises logo present in any given image. The image logo classification was built in two different models of neural network for comparison. Later, the project was deployed in EC2 instance to create web application with user interface.
 
-2) Perform retraining of Inception V3 model from keras
-
-3) Getting real time images from instagram and twitter for testing
-
-__Things in progress__
-
-1) model building using keras
-
-2) Visualization of retraining using tensorboard
-
-<h2>Week 2</h2>
-
-1) Complete the model building
-
-2) Perform analysis like logo visibility on the test results
-
-3) WebApp
-
-4) Deployment on AWS
-
-5) Dockerizing the pipeline
-
-__Challenges faced__
-
-1) The training dataset contained less number of images with real time backgrounds
