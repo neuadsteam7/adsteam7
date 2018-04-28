@@ -19,7 +19,7 @@ $(document).ready(function() {
     ready: function(modal, trigger) {
       $.ajax({
         type: "POST",
-        url: '/classify_image/classify/api/',
+        url: '/classify/api/',
         data: {
           'image64': $('#img-card').attr('src')
         },

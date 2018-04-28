@@ -1,12 +1,7 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 from flask import Flask
 from flask import Flask, flash, redirect, render_template, request, url_for
 import os
 import json
-from django import template
 from django.core.files.temp import NamedTemporaryFile
 import base64
 import sys
@@ -21,7 +16,7 @@ import cv2
 import re
 import sys
 import tarfile
-
+from instalooter import looters
 from PIL import Image
 import glob
 import io
@@ -50,10 +45,10 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 session = boto3.session.Session(region_name='us-east-1')
-s3client = session.client('s3', config= boto3.session.Config(signature_version='s3v4'),aws_access_key_id='AKIAIFICJKDVRYOIBOFQ',
-         aws_secret_access_key='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')
+s3client = session.client('s3', config= boto3.session.Config(signature_version='s3v4'),aws_access_key_id='<accesskey>',
+         aws_secret_access_key='<aws_secret_access_key>')
 
-model = load_model('G:\weights.best.hdf5')
+model = load_model('Flask/weights.best.hdf5')
 
 def allowed_file(filename):
     # this has changed from the original example because the original did not work for me
@@ -63,7 +58,7 @@ def allowed_file(filename):
 def s3_download():
     bucketName = "data-brand-logos"
     session = Session(aws_access_key_id='AKIAIFICJKDVRYOIBOFQ',
-                      aws_secret_access_key='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')
+                      aws_secret_access_key='I4g18x1t2RsN6R2XIMjhGNMum7oLA546Qsjex+0D')
     s3 = session.resource('s3')
 
     your_bucket = s3.Bucket(bucketName)
@@ -71,6 +66,13 @@ def s3_download():
     KEY2  = 'output_labels.txt'
     your_bucket.download_file(KEY1, "Flask/output_graph.pb")
     your_bucket.download_file(KEY2, "Flask/output_labels.txt")
+
+def hash_tag(tag_word,no_of_images):
+    looter = looters.HashtagLooter(tag_word)
+    return looter.download_pictures(os.getcwd()+"hash_images/"+tag_word, media_count=no_of_images)
+def public_user(user,no_of_user_images):
+    user = looters.ProfileLooter(user)
+    return user.download_pictures(os.getcwd()+"user_image/", media_count=no_of_user_images)
 
 
 
@@ -86,8 +88,8 @@ FLAGS = tf.app.flags.FLAGS
 # define directory that the model is stored in (default is the current directory)
 tf.app.flags.DEFINE_string(
     'model_dir', '',
-    """output_graph.pb, """
-    """output_labels.txt""")
+    """Flask/output_graph.pb, """
+    """Flask/output_labels.txt""")
 
 tf.app.flags.DEFINE_integer('num_top_predictions', 5,
                             """Display this many predictions.""")
@@ -119,29 +121,42 @@ def register():
 
 @app.route('/predict', methods=['POST'])
 def predict_image():
+    classes_array =['Adidas','Apple','BMW','Citroen','Cocacola','DHL','Fedex','Ferrari','Ford','Google','Heineken','HP','Intel','McDonalds',
+    'Mini','Nbc','Nike','Pepsi','Porsche','Puma','RedBull','Sprite','Starbucks','Texaco','Unicef','Vodafone','Yahoo']
     opt = SGD(momentum=0.9, lr=5e-3)
     model.compile(metrics=['accuracy'], optimizer=opt, loss='categorical_crossentropy')
     # Preprocess the image so that it matches the training input
-    image = request.files['file']
-    image = Image.open(image)
-    image = np.asarray(image.resize((64,64)))
-    image = image.reshape((1,64,64,1))
+    img = Image.open(request.files['file'])
+    img = np.array(img)
+    img = cv2.resize(img, (64, 64))
 
+    img = np.reshape(img, [1, 64, 64, 3])
     # Use the loaded model to generate a prediction.
-    pred = model.predict(image)
-
-    # Prepare and send the response.
+    pred = model.predict(img)
     digit = np.argmax(pred)
-    prediction = {'digit':int(digit)}
-    print(prediction)
-    return jsonify(prediction)
+
+    prediction = {'logo': classes_array[digit]}
+    return render_template('output.html', data_json=prediction);
+
+
+
+@app.route('/insta', methods=['POST'])
+def insta():
+    if request.method == 'POST':
+        if request.form.get('username') != '':
+            username = request.form.get('username')
+            public_user(username, 3)
+        if request.form.get('hashtag') != '':
+            hashtag = request.form.get('hashtag')
+            hash_tag(hashtag, 3)
+    return render_template('insta.html');
 
 
 @app.route("/classify", methods=["POST"])
 def classify():
 
     if request.method == 'POST':
-        s3_download()
+        #s3_download()
         data = {"success": False}
         sample_data = {"success": False}
         tmp_f = NamedTemporaryFile()
@@ -190,7 +205,7 @@ class NodeLookup(object):
     def __init__(self, label_lookup_path=None):
         if not label_lookup_path:
             label_lookup_path = os.path.join(
-                FLAGS.model_dir, 'output_labels.txt')
+                FLAGS.model_dir, 'Flask/output_labels.txt')
 
         self.node_lookup = self.load(label_lookup_path)
 
@@ -227,7 +242,7 @@ def create_graph():
     """Creates a graph from saved GraphDef file and returns a saver."""
     # Creates graph from saved graph_def.pb.
     with tf.gfile.FastGFile(os.path.join(
-            FLAGS.model_dir, 'output_graph.pb'), 'rb') as f:
+            FLAGS.model_dir, 'Flask/output_graph.pb'), 'rb') as f:
         graph_def = tf.GraphDef()
         graph_def.ParseFromString(f.read())
         _ = tf.import_graph_def(graph_def, name='')
@@ -273,4 +288,4 @@ def main():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+	app.run(host='0.0.0.0',port=5000,debug=True)
